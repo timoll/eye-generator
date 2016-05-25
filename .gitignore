@@ -64,3 +64,4 @@ target/
 
 *.blend1
 *.blend
+!base.blend
