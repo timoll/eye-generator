@@ -8,6 +8,7 @@ eyePosRight = mathutils.Vector((3.2,0,0))
 glassesPos = mathutils.Vector((0, 4.2, -1.2))
 diameter=25
 eyeScale=diameter/24
+lastFrame=120
 
 leftEye = bpy.data.objects['complexEyeGullstrandLeft']
 rightEye = bpy.data.objects['complexEyeGullstrandRight']
@@ -83,6 +84,7 @@ for keyFrame in glassesKey:
     glasses.keyframe_insert(data_path='rotation_euler', frame=(cf))
     glasses.keyframe_insert(data_path='location', frame=(cf))
 
+bpy.data.scenes['Scene'].frame_end = lastFrame
 setCam('eye')
 bpy.context.scene.camera = rightUpCam
 bpy.data.scenes['Scene'].render.filepath ='//rightup/'
