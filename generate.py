@@ -22,10 +22,12 @@ sceneCam = bpy.data.objects['Scene']
 def setCam( cam ):
     scene=bpy.data.scenes['Scene']
     if cam == 'scene':
+        bpy.data.lamps['Sun'].node_tree.nodes['Emission'].inputs[1].default_value=0.5
         scene.frame_step=4
         scene.render.resolution_y=1080
         scene.render.resolution_x=1920
     elif cam == 'eye':
+        bpy.data.lamps['Sun'].node_tree.nodes['Emission'].inputs[1].default_value=4
         scene.frame_step=1
         scene.render.resolution_y=240
         scene.render.resolution_x=320
