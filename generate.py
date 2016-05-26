@@ -41,11 +41,11 @@ for keyFrame in leftEyeKey:
     bpy.context.scene.frame_set(cf)
     leftEye.rotation_euler = keyFrame[1]
     leftEye.keyframe_insert(data_path='rotation_euler', frame=(cf))
-    
+
 for keyFrame in rightEyeKey:
-    cf = keyFrame[0]  
+    cf = keyFrame[0]
     bpy.context.scene.frame_set(cf)
     rightEye.rotation_euler = keyFrame[1]
     rightEye.keyframe_insert(data_path='rotation_euler', frame=(cf))
 
-bpy.ops.wm.save_as_mainfile(copy=true, filepath="shiftLeftEye.blend")
+bpy.ops.wm.save_as_mainfile(copy=true, filepath="generated.blend")
