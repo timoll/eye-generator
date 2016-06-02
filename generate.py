@@ -64,20 +64,6 @@ rotRight = rightEye.rotation_euler
 leftEye.location = eyePosLeft
 rightEye.location = eyePosRight
 
-rightEyeKey=[]
-rightEyeKey.append([1, mathutils.Vector((-math.pi/2, 0, math.pi/12))])
-rightEyeKey.append([31, mathutils.Vector((-math.pi/2, 0, -math.pi/12))])
-rightEyeKey.append([61, mathutils.Vector((-math.pi/2+math.pi/12, 0, 0))])
-rightEyeKey.append([91, mathutils.Vector((-math.pi/2-math.pi/12, 0, 0))])
-rightEyeKey.append([121, mathutils.Vector((-math.pi/2, 0, 0))])
-
-glassesKey=[]
-glassesKey.append([1, mathutils.Vector((math.pi/2, 0, 0)), glassesPos + mathutils.Vector((0,0,0))])
-glassesKey.append([31, mathutils.Vector((math.pi/2, math.pi/36, 0)), glassesPos + mathutils.Vector((0,0,0.5))])
-glassesKey.append([61, mathutils.Vector((math.pi/2+math.pi/36, 0, 0)), glassesPos + mathutils.Vector((0,0,1))])
-glassesKey.append([91, mathutils.Vector((math.pi/2, -math.pi/36, 0)), glassesPos + mathutils.Vector((0,0,0))])
-glassesKey.append([121, mathutils.Vector((math.pi/2, 0, 0)), glassesPos + mathutils.Vector((0,0,0))])
-
 factor=math.pi/180
 
 for keyFrame in data["Left Eye Keyframes"]:
@@ -99,6 +85,23 @@ for keyFrame in data["Glasses Keyframes"]:
     glasses.location = glassesPos + mathutils.Vector(keyFrame["Position"])
     glasses.keyframe_insert(data_path='rotation_euler', frame=(cf))
     glasses.keyframe_insert(data_path='location', frame=(cf))
+
+glassesLog = open('log/glasses.log', 'w')
+leftLog = open('log/leftEye.log', 'w')
+rightLog = open('log/rightEye.log','w')
+
+for i in range(1, lastFrame):
+    bpy.context.scene.frame_set(i)
+    glassesStr='{0:.3f}\t{1:.3f}\t{2:.3f}\t{3:.3f}\t{4:.3f}\t{5:.3f}\n'.format(glasses.location.x*10,glasses.location.y*10,glasses.location.z*10,glasses.rotation_euler.x/factor,glasses.rotation_euler.y/factor,glasses.rotation_euler.z/factor)
+    leftString='{0:.3f}\t{1:.3f}\t{2:.3f}\n'.format(leftEye.rotation_euler.x/factor,leftEye.rotation_euler.y/factor,leftEye.rotation_euler.z/factor)
+    rightString='{0:.3f}\t{1:.3f}\t{2:.3f}\n'.format(rightEye.rotation_euler.x/factor,rightEye.rotation_euler.y/factor,rightEye.rotation_euler.z/factor)
+    glassesLog.write(glassesStr)
+    rightLog.write(rightString)
+    leftLog.write(leftString)
+
+glassesLog.close()
+leftLog.close()
+rightLog.close()
 
 bpy.data.scenes['Scene'].frame_end = lastFrame
 setCam('eye')
