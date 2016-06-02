@@ -1,14 +1,33 @@
 import bpy
 import mathutils
 import math
+import json
+import sys
+import argparse
+
+argv = sys.argv
+try:
+     index = argv.index("--") + 1
+except ValueError:
+     index = len(argv)
+
+print(argv)
+argv = argv[index:]
+print(argv)
+parser = argparse.ArgumentParser(description='Generate Eye Animation')
+parser.add_argument("jsonFile", help="Json-File with information about animation")
+args=parser.parse_args(argv)
+jsonData=open(args.jsonFile)
+data = json.load(jsonData)
+print(data["Eye Position Left"])
 
 true=1
-eyePosLeft = mathutils.Vector((-3.2,0,0))
-eyePosRight = mathutils.Vector((3.2,0,0))
-glassesPos = mathutils.Vector((0, 4.2, -1.2))
-diameter=25
+eyePosLeft = mathutils.Vector(data["Eye Position Left"])
+eyePosRight = mathutils.Vector(data["Eye Position Right"])
+glassesPos = mathutils.Vector((0, 4, -1.2))
+diameter=data["Diameter"]
 eyeScale=diameter/24
-lastFrame=120
+lastFrame=data["Last Frame"]
 
 leftEye = bpy.data.objects['complexEyeGullstrandLeft']
 rightEye = bpy.data.objects['complexEyeGullstrandRight']
@@ -27,7 +46,7 @@ def setCam( cam ):
         scene.render.resolution_y=1080
         scene.render.resolution_x=1920
     elif cam == 'eye':
-        bpy.data.lamps['Sun'].node_tree.nodes['Emission'].inputs[1].default_value=20
+        bpy.data.lamps['Sun'].node_tree.nodes['Emission'].inputs[1].default_value=5
         scene.frame_step=1
         scene.render.resolution_y=240
         scene.render.resolution_x=320
@@ -45,13 +64,6 @@ rotRight = rightEye.rotation_euler
 leftEye.location = eyePosLeft
 rightEye.location = eyePosRight
 
-leftEyeKey=[]
-leftEyeKey.append([1, mathutils.Vector((-math.pi/2, 0, math.pi/12))])
-leftEyeKey.append([31, mathutils.Vector((-math.pi/2, 0, -math.pi/12))])
-leftEyeKey.append([61, mathutils.Vector((-math.pi/2+math.pi/12, 0, 0))])
-leftEyeKey.append([91, mathutils.Vector((-math.pi/2-math.pi/12, 0, 0))])
-leftEyeKey.append([121, mathutils.Vector((-math.pi/2, 0, 0))])
-
 rightEyeKey=[]
 rightEyeKey.append([1, mathutils.Vector((-math.pi/2, 0, math.pi/12))])
 rightEyeKey.append([31, mathutils.Vector((-math.pi/2, 0, -math.pi/12))])
@@ -66,23 +78,25 @@ glassesKey.append([61, mathutils.Vector((math.pi/2+math.pi/36, 0, 0)), glassesPo
 glassesKey.append([91, mathutils.Vector((math.pi/2, -math.pi/36, 0)), glassesPos + mathutils.Vector((0,0,0))])
 glassesKey.append([121, mathutils.Vector((math.pi/2, 0, 0)), glassesPos + mathutils.Vector((0,0,0))])
 
-for keyFrame in leftEyeKey:
-    cf = keyFrame[0]
+factor=math.pi/180
+
+for keyFrame in data["Left Eye Keyframes"]:
+    cf = keyFrame["Frame"]
     bpy.context.scene.frame_set(cf)
-    leftEye.rotation_euler = keyFrame[1]
+    leftEye.rotation_euler = [x*factor for x in keyFrame["Rotation"]]
     leftEye.keyframe_insert(data_path='rotation_euler', frame=(cf))
 
-for keyFrame in rightEyeKey:
-    cf = keyFrame[0]
+for keyFrame in data["Right Eye Keyframes"]:
+    cf = keyFrame["Frame"]
     bpy.context.scene.frame_set(cf)
-    rightEye.rotation_euler = keyFrame[1]
+    rightEye.rotation_euler = [x*factor for x in keyFrame["Rotation"]]
     rightEye.keyframe_insert(data_path='rotation_euler', frame=(cf))
 
-for keyFrame in glassesKey:
-    cf =keyFrame[0]
+for keyFrame in data["Glasses Keyframes"]:
+    cf = keyFrame["Frame"]
     bpy.context.scene.frame_set(cf)
-    glasses.rotation_euler = keyFrame[1]
-    glasses.location = keyFrame[2]
+    glasses.rotation_euler = [x*factor for x in keyFrame["Rotation"]]
+    glasses.location = glassesPos + mathutils.Vector(keyFrame["Position"])
     glasses.keyframe_insert(data_path='rotation_euler', frame=(cf))
     glasses.keyframe_insert(data_path='location', frame=(cf))
 
