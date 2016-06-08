@@ -31,6 +31,8 @@ lastFrame=data["Last Frame"]
 
 leftEye = bpy.data.objects['complexEyeGullstrandLeft']
 rightEye = bpy.data.objects['complexEyeGullstrandRight']
+leftEyeLid = bpy.data.objects['eyeLidLeft']
+rightEyeLid = bpy.data.objects['eyeLidRight']
 glasses = bpy.data.objects['glasses']
 leftDownCam = bpy.data.objects['LeftDown']
 leftUpCam = bpy.data.objects['LeftUp']
@@ -85,6 +87,18 @@ for keyFrame in data["Glasses Keyframes"]:
     glasses.location = glassesPos + mathutils.Vector(keyFrame["Position"])
     glasses.keyframe_insert(data_path='rotation_euler', frame=(cf))
     glasses.keyframe_insert(data_path='location', frame=(cf))
+
+for keyFrame in data["Left Eye Lid"]:
+    cf = keyFrame["Frame"]
+    bpy.context.scene.frame_set(cf)
+    leftEyeLid.rotation_euler = [x*factor for x in keyFrame["Rotation"]]
+    leftEyeLid.keyframe_insert(data_path='rotation_euler', frame=(cf))
+
+for keyFrame in data["Right Eye Lid"]:
+    cf = keyFrame["Frame"]
+    bpy.context.scene.frame_set(cf)
+    rightEyeLid.rotation_euler = [x*factor for x in keyFrame["Rotation"]]
+    rightEyeLid.keyframe_insert(data_path='rotation_euler', frame=(cf))
 
 glassesLog = open('log/glasses.log', 'w')
 leftLog = open('log/leftEye.log', 'w')
