@@ -68,3 +68,4 @@ target/
 *.mp4
 *.log
 !base.blend
+!calibrate.blend

@@ -48,10 +48,10 @@ def setCam( cam ):
         scene.render.resolution_y=1080
         scene.render.resolution_x=1920
     elif cam == 'eye':
-        bpy.data.lamps['Sun'].node_tree.nodes['Emission'].inputs[1].default_value=5
+        bpy.data.lamps['Sun'].node_tree.nodes['Emission'].inputs[1].default_value=8
         scene.frame_step=1
-        scene.render.resolution_y=240
-        scene.render.resolution_x=320
+        scene.render.resolution_y=960
+        scene.render.resolution_x=1280
     return
 
 
