@@ -67,5 +67,6 @@ target/
 *.png
 *.mp4
 *.log
+*.csv
 !base.blend
 !calibrate.blend
