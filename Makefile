@@ -9,7 +9,7 @@ endif
 	@mkdir log || true
 	blender base.blend -b -P generate.py -- ${ANIMATION_JSON}
 clean:
-	@find *.blen* | grep -v 'base\.blend$$'| grep -v 'calibrate\.blend$$' | xargs rm >/dev/null || true
+	@find *.blen* | grep -v 'base\.blend$$'| grep -v 'calibrate\.blend$$' | grep -v 'calibrate0\.blend$$' | xargs rm >/dev/null || true
 render: leftDown.blend leftUp.blend rightDown.blend rightUp.blend scene.blend
 	@mkdir log || true
 	nohup blender -b leftDown.blend -E CYCLES -t ${CPU_RENDER} -a </dev/null > log/renderld.log 2>&1 & 
